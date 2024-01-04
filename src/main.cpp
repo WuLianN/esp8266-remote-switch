@@ -28,6 +28,7 @@ const int subQoS = 1;            // 客户端订阅主题时使用的QoS级别�
 const bool cleanSession = false; // 清除会话（如QoS>0必须要设为false）
 
 bool D2Status = LOW;
+bool ledStatus = HIGH;
 
 // 发布信息
 void pubMQTTmsg()
@@ -119,11 +120,15 @@ void receiveCallback(char *topic, byte *payload, unsigned int length)
   { // 如果收到的信息以“1”为开始
     D2Status = HIGH;
     digitalWrite(D2, D2Status);
+    ledStatus = LOW;
+    digitalWrite(LED_BUILTIN, LOW); // 则点亮LED。
   }
   else
   {
     D2Status = LOW;
     digitalWrite(D2, D2Status);
+    ledStatus = HIGH;
+    digitalWrite(LED_BUILTIN, ledStatus); // 则熄灭LED。
   }
 
   pubMQTTmsg();
@@ -131,7 +136,9 @@ void receiveCallback(char *topic, byte *payload, unsigned int length)
 
 void setup()
 {
-  pinMode(D2, OUTPUT); // 设置板上D2引脚为输出模式
+  pinMode(LED_BUILTIN, OUTPUT);         // 设置板上LED引脚为输出模式
+  pinMode(D2, OUTPUT);                  // 设置板上D2引脚为输出模式
+  digitalWrite(LED_BUILTIN, ledStatus); // 启动后关闭板上LED LOW亮灯 HIGH熄灯
   Serial.begin(9600);                   // 启动串口通讯
 
   // 自动连接WiFi。以下语句的参数是连接ESP8266时的WiFi名称
