@@ -107,7 +107,7 @@ void receiveCallback(char *topic, byte *payload, unsigned int length)
   Serial.print("Message Received [");
   Serial.print(topic);
   Serial.print("] ");
-  for (int i = 0; i < length; i++)
+  for (uint i = 0; i < length; i++)
   {
     Serial.print((char)payload[i]);
   }
